@@ -12,11 +12,22 @@ class ViewController: UIViewController {
     let adjustButton = UIButton();
     let redView = UIView();
     
+    var animator = UIViewPropertyAnimator();
+    var progress: CGFloat = 0.0;
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         addSubView();
         constrains();
         setupUI();
+        
+        let gesture = UIPanGestureRecognizer(target: self, action: #selector(handlePan(recognizer:)));
+        
+        view.addGestureRecognizer(gesture);
+        animator = UIViewPropertyAnimator.init(duration: 2, curve: .easeOut, animations: {
+            self.redView.frame = self.redView.frame.offsetBy(dx: 200, dy: 0);
+        })
+        
         adjustButton.addTarget(self, action: #selector(myAnimate), for: .touchUpInside);
         // Do any additional setup after loading the view.
     }
@@ -26,10 +37,41 @@ class ViewController: UIViewController {
     }
     
     @objc
+    func handlePan(recognizer: UIPanGestureRecognizer) {
+        switch recognizer.state {
+        case .began:
+            animator.pauseAnimation();
+            progress = animator.fractionComplete;
+        case .changed:
+            let translation = recognizer.translation(in: self.redView);
+            animator.fractionComplete = translation.x / 200 + progress;
+        case .ended:
+            animator.continueAnimation(withTimingParameters: nil, durationFactor: 0);
+        default:
+            break;
+        }
+    }
+    
+    @objc
     func myAnimate() {
-        UIView.animate(withDuration: 0.5, delay: 0.3, options: .curveEaseOut, animations: {
-            self.redView.frame.origin.y += 100
-        }, completion: nil)
+//        /// 無法暫停, 回撤, 與手勢交互
+//        UIView.animate(withDuration: 0.5, delay: 0.3, options: .curveEaseOut, animations: {
+//            self.redView.frame = self.redView.frame.offsetBy(dx: 200, dy: 100);
+//        }, completion: nil)
+//
+//
+//        /// UIViewPropertyAnimator 主要與手勢交互
+//        let animator = UIViewPropertyAnimator(duration: 2, curve: .linear) {
+//            self.redView.frame = self.redView.frame.offsetBy(dx: 200, dy: 100);
+//        }
+//        animator.startAnimation();
+        
+        /// CALayer
+        let animation = CABasicAnimation.init(keyPath: "position.x");
+        animation.fromValue = self.redView.center.x;
+        animation.toValue = self.redView.center.x + 200;
+        animation.duration = 2;
+        self.redView.layer.add(animation, forKey: nil);
     }
     
     func addSubView() {
