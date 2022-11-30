@@ -77,6 +77,7 @@
 				16EC09292933993400D804F4 /* Sources */,
 				16EC092A2933993400D804F4 /* Frameworks */,
 				16EC092B2933993400D804F4 /* Resources */,
+				16BC3D3C29364954001F1A3C /* Swift Format */,
 			);
 			buildRules = (
 			);
@@ -132,6 +133,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		16BC3D3C29364954001F1A3C /* Swift Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Format";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftformat >/dev/null; then\nswiftformat .\nelse\necho \"warning: SwiftFormat not installed.\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		16EC09292933993400D804F4 /* Sources */ = {
